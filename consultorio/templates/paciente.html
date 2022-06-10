@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="text-center h1 text-primary">{{paciente.pessoa.nome}}</div>
+
+{% include '_nav.html' %}
+
+
+  <table class="table">
+    <tbody>
+      <tr>
+        <td>Nome</td>
+        <td>{{paciente.pessoa.nome}}</td>
+      </tr>
+      {% for contato in contatos_paciente %}
+      <tr>
+        <td>{{contato.tipo.tipo}}</td>
+        <td>{{contato.contato}}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td>Responsável</td>
+        <td>{{paciente.responsavel.nome}}</td>
+      </tr>
+      {% for contato in contatos_responsavel %}
+      <tr>
+        <td>{{contato.tipo.tipo}}</td>
+        <td>{{contato.contato}}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td>Escola</td>
+        <td>{{paciente.escola.escola_nome}}</td>
+      </tr>
+      <tr>
+        <td>Coordenador</td>
+        <td>{{paciente.coordenador.coordenador_nome}}</td>
+      </tr>
+      {% for contato in contatos_coordenador %}
+      <tr>
+        <td>{{contato.tipo.tipo}}</td>
+        <td>{{contato.contato}}</td>
+      </tr>
+      {% endfor %}
+
+      <tr>
+        <td>Observações</td>
+        <td>{{paciente.obs}}</td>
+      </tr>
+
+      <tr>
+        <td>
+          <a class="btn float-left btn-success" href="{{url_for('historico', ID= paciente.paciente_ID)}}" role="button">Histórico</a>
+        </td>
+        <td>
+          <a class="btn float-right btn-success" href="{{url_for('proximas', ID= paciente.paciente_ID)}}" role="button">Próximas consultas</a>
+        </td>
+
+      </tr>
+
+
+    </tbody>
+  </table>
+
+{% endblock content %}

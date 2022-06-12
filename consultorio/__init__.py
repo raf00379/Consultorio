@@ -3,7 +3,7 @@ from flask import render_template, session, request, redirect, url_for, Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import urllib.parse
-app = Flask(__name__)
+app = Flask(__name__,template_folder="templates")
 usuario = 'root'
 senha= '123456'
 

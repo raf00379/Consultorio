@@ -1,11 +1,13 @@
+import base64
+import io
 import time, datetime, pytz
-from .funcoes import *
+from sqlalchemy.sql import *
+from base64 import b64encode
 from flask import render_template, session, request, redirect, url_for, flash
+from consultorio.controllers.funcoes import *
 from consultorio.models.forms import *
 from consultorio import app, db, bcrypt
 from consultorio.models.models import Atendimento, Coordenador, Escola, Psicopedagogo, Situacao, Tipo_contato, Tipo_endereco, Usuario, Sala, Paciente, Pessoa, Contato, Endereco
-
-
 """
 Escola
 Endereço da escola 
@@ -13,37 +15,64 @@ Telefone da escola
 Coordenadora (o)
 série atual 
 Período 
-
-
-
 """
+
 BR = pytz.timezone('America/Sao_Paulo')
-@app.route('/teste')
-def teste(str):
-    return render_template('escolas.hmtl')
+@app.route('/addPaciente/<string:value>')
+def pagina(value):
+   if value == 'addPedagogo':
+       return redirect(url_for('add_psicopedagogo'))
+   elif value == 'addPaciente':
+      return redirect(url_for('add_paciente'))
+   elif value == 'addCoordenador':
+       return redirect(url_for('add_coordenador'))
+   elif value == 'addEscola':
+       return redirect(url_for('add_escola'))
+   elif value == 'addSituacao':
+       return redirect(url_for('add_situacao'))
+   elif value == 'addSala':
+       return redirect(url_for('add_sala'))
+   elif value == 'home':
+       return redirect(url_for('home'))
+   elif value == 'calendario':
+       return redirect(url_for('esse_mes'))
+   elif value == 'psicopedagogos':
+       return redirect(url_for('psicopedagogos'))
+   elif value == 'escolas':
+       return redirect(url_for('escolas'))
+   elif value == 'salas':
+       return redirect(url_for('salas'))
+   elif value == 'pacientes':
+       return redirect(url_for('pacientes'))
+   elif value == 'coordenadores':
+       return redirect(url_for('coordenadores'))
+   else:
+       return redirect(url_for('loginacesso'))
+@app.route('/')
+def loginacesso():
+    return render_template('login.html')
 
 @app.route('/index')
 def index():
     return render_template('index.html')
-@app.route('/')
+@app.route('/home')
 def home():
     if 'email' not in session:
-       # return redirect(url_for('login'))
-         return redirect(url_for('index'))
+       #return redirect(url_for('primeiro'))
+        return redirect(url_for('loginacesso'))
 
     usuario = Usuario.query.filter_by(email = session['email']).first()
 
     if usuario is None:
         del session['email']
-        return redirect(url_for('login'))
-
+        return redirect(url_for('loginacesso'))
 
     ano = time.localtime(time.time()).tm_year
     mes = time.localtime(time.time()).tm_mon
     dia = time.localtime().tm_mday
 
     #return render_template('index.html', title = 'Inicio', email = session['email'], nome = usuario.nome_consultorio)
-    return redirect(url_for('dia', ano = ano, mes = mes, dia= dia))
+    return redirect(url_for('index'))
 
 
 @app.route('/esse_mes')
@@ -283,39 +312,42 @@ def registrar():
     form = Formulario_de_registro(request.form)
     if request.method == "POST" and form.validate():
         hash_pass = bcrypt.generate_password_hash(form.senha.data)
-        usuario = Usuario(nome = form.nome.data , nome_consultorio = form.nome_consultorio.data, email = form.email.data, senha = hash_pass)
+        usuario = Usuario(nome = form.nome.data , nome_consultorio = form.nome_consultorio.data, email = form.email.data, senha = hash_pass,foto='1000')
         db.session.add(usuario)
         db.session.commit()
 
         flash(f'Bem vindo {form.nome.data} Obrigado por registrar')
-        return redirect(url_for('home'))
-    return render_template('registrar.html', title= "Página de Registro", form = form)
+        return redirect(url_for('index'))
+    #return render_template('registrar.html', title= "Página de Registro", form = form)
 
 
 @app.route('/login', methods = ["GET", "POST"])
 def login():
-    form = Formulario_login(request.form)
-    
-    if request.method == "POST" and form.validate():
+   form = Formulario_login(request.form)
+   Email = request.form.get("Email")
+   Senha = request.form.get("Senha")
 
-        usuario = Usuario.query.filter_by(email = form.email.data).first()
+   if request.method == "POST":
+       usuario = Usuario.query.filter_by(email = Email).first()
+       senha = Usuario.query.filter_by(senha = Senha).first()
 
-        if usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data):
-            session['email'] = form.email.data
-            flash(f'Bem vindo {form.email.data} Você está logado', 'success')
-            return redirect(request.args.get('next') or url_for('home'))
-        
-        else:
-            flash(f'Não foi possivel logar')
+       if usuario and senha:
+           session['email'] = Email
+           bfoto = Usuario.query.filter_by(email=Email).first()
+           with open(bfoto,'rb') as f:
+               foto = io.IOBase(f.read())
+           flash(f'Bem vindo {Email} Você está logado', 'success')
+           return render_template('index.html',Foto = foto)
+       else:
+        #  flash(f'Não foi possivel logar')
 
-        #return redirect(url_for('home'))
-        return redirect(url_for('index'))
-    return render_template('login.html', title = 'Login', form = form)
+        #return redirect(url_for('index'))
+        return render_template('login.html', title = 'Login', form = form)
 
 @app.route('/logout')
 def logout():
     del session['email']
-    return redirect(url_for('login'))
+    return redirect(url_for('loginacesso'))
 
 @app.route('/cadastro/sala', methods = ['GET', 'POST'])
 def add_sala():

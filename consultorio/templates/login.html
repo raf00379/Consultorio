@@ -6,6 +6,7 @@
     <meta name="description" content="">
     <title>Tela de Login</title>
     <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href=" {{url_for('static', filename='css/login.css')}}">
 <!-- <link href="bootstrap.min.css" rel="stylesheet"> -->
 {% extends "base.html" %}
 {% block content %}
@@ -33,17 +34,19 @@
   <body class="text-center">
     
 <main class="form-login">
-  <form  action="{{url_for('registrar')}}" method="get">
+  <form  method="post" action="{{url_for('login')}}" enctype="multipart/form-data">
 
     <div class="modal-body p-5 pt-0">
+
+
     <h1 class="h3 mb-3 fw-normal">Login</h1>
 
     <div class="form-floating mb-3">
-      <input type="email" width="50" class="form-control rounded-4"  id="floatingInput" placeholder="name@example.com">
+      <input type="email" width="50" class="form-control rounded-4"  name="Email" id="Email" placeholder="name@example.com">
       <label for="floatingInput">E-Mail</label>
     </div>
     <div class="form-floating mb-3">
-      <input type="password"  class="form-control rounded-4"  id="floatingPassword" placeholder="Senha">
+      <input type="password"  class="form-control rounded-4" name="Senha"  id="Senha" placeholder="Senha">
       <label for="floatingPassword">Senha</label>
     </div>
 
@@ -53,10 +56,11 @@
       </label>
     </div>
     <div class="form-floating mb-3">
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Logar</button>
+  
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
   </div>
   <div class="form-floating mb-3">
-    <button class="w-100 btn btn-lg btn-outline-secondary" style="color:black">Registre-se</button>
+    <button class="w-100 btn btn-lg btn-outline-secondary" style="color:black">Resgistrar-se</button>
   </div>
   </form>
 </div>

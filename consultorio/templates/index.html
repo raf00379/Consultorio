@@ -20,7 +20,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 </head>
-<body style="background-color: rgb(203, 212, 216);">
+<body>
 
    <!-- Top-Bar fixa -->
    
@@ -34,19 +34,19 @@
    
     <div class="dropdown-menu dropdown-menu-dark text-anchor shadow" aria-labelledby="dropdown" id="dropdown1">  
   
-      <a class="dropdown-item" href="#">Home </a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('home');">Home </a>
       <hr class="dropdown-divider">
-      <a class="dropdown-item" href="#">Calendário</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('calendario');">Calendário</a>
       <hr class="dropdown-divider">
-      <a class="dropdown-item" href="#">Psicopedagogos</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('psicopedagogos');">Psicopedagogos</a>
       <hr class="dropdown-divider">
-      <a class="dropdown-item" href="#">Escolas</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('escolas');">Escolas</a>
       <hr class="dropdown-divider">
-      <a class="dropdown-item" href="#">Salas</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('salas');">Salas</a>
       <hr class="dropdown-divider">
-      <a class="dropdown-item" href="#">Pacientes</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('pacientes');">Pacientes</a>
       <hr class="dropdown-divider">
-      <a class="dropdown-item" href="https://www.uol.com.br">Coordenadores</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('coordenadores');">Coordenadores</a>
       <hr class="dropdown-divider">
     </div>
   </div>
@@ -57,19 +57,19 @@
 
     <div class="dropdown">
     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-      <img src="foto.jpg" width="40" height="40" class="rounded-circle me-2">
+      <img src="{{url_for('static',filename=Foto)}}" width="40" height="40" class="rounded-circle me-2">
       <strong>Usuário</strong>
     </a>
     
     <class class="dropdown-menu dropdown-menu-dark text-anchor shadow" aria-labelledby="dropdownUser1">
-      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('escolas');">Adicionar Pedagogo</a>
-      <a class="dropdown-item" href="#">Adicionar Paciente</a>
-      <a class="dropdown-item" href="#">Adicionar Coordenador</a>
-      <a class="dropdown-item" href="#">Adicionar Escola</a>
-      <a class="dropdown-item" href="#">Adicionar Situação</a>
-      <a class="dropdown-item" href="#">Adicionar Sala</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addPedagogo');">Adicionar Pedagogo</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addPaciente');">Adicionar Paciente</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addCoordenador');">Adicionar Coordenador</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addEscola');">Adicionar Escola</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addSituacao');">Adicionar Situação</a>
+      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addSala');">Adicionar Sala</a>
       <hr class="dropdown-divider">
-      <a class="dropdown-item">Sair</a>
+      <a class="dropdown-item" href="{{url_for('logout')}}">Sair</a>
     </div>
     </div>
     <form id="mform" class="d-flex">
@@ -101,7 +101,7 @@
 <script>
  function CarregarPaginas(pagina)
  {
-        document.getElementById("iPagina").src="{{url_for('teste')}}".replace("teste",pagina);
+        document.getElementById("iPagina").src="{{url_for('pagina',value='mane')}}".replace('mane',pagina);
         
  }
 

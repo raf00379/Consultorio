@@ -1,5 +1,9 @@
+import mysql.connector
 import base64
 import io
+from PIL import Image
+import imageio as image
+import os
 import time, datetime, pytz
 from sqlalchemy.sql import *
 from base64 import b64encode
@@ -18,6 +22,28 @@ Período
 """
 
 BR = pytz.timezone('America/Sao_Paulo')
+objeto = None
+def conectarBDMySQL():
+      return mysql.connector.connect(user='root', password='123456',host='localhost',database='Consultorio')
+
+@app.route('/uploadImage',methods = ['GET', 'POST'])
+def uploadImage():
+
+     if request.method == 'POST':
+          form = Formulario_de_registro(request.form)
+          uploade_file = request.files['filename']
+          diretorio = request.form['diretorio']
+          # filepath =  os.path.join(app.config['FILE_UPLOADS'],uploade_file.filename)
+          uploade_file.save(diretorio)
+          global objeto
+          with open(diretorio,'rb') as file:
+              objeto = file.read()
+              data = b64encode(objeto).decode("utf-8")
+              return render_template('registrar.html', title="Página de Registro", form=form,objeto=objeto, data=data)
+
+          #return redirect(request.url,form=form,objeto=objeto,data=data)
+          # render_template('registrar.html',data=data)
+
 @app.route('/addPaciente/<string:value>')
 def pagina(value):
    if value == 'addPedagogo':
@@ -311,16 +337,27 @@ def agenda(ano, mes):
 def registrar():
     form = Formulario_de_registro(request.form)
     if request.method == "POST" and form.validate():
-        hash_pass = bcrypt.generate_password_hash(form.senha.data)
-        usuario = Usuario(nome = form.nome.data , nome_consultorio = form.nome_consultorio.data, email = form.email.data, senha = hash_pass,foto='1000')
-        db.session.add(usuario)
-        db.session.commit()
+            global objeto
+            foto = objeto
+            if foto == None:
+                arquivo = os.path.join(app.static_folder,'css/sem_foto.png')
+                with open(arquivo, 'rb') as file:
+                    foto = file.read()
 
-        flash(f'Bem vindo {form.nome.data} Obrigado por registrar')
-        return redirect(url_for('index'))
-    #return render_template('registrar.html', title= "Página de Registro", form = form)
-
-
+            hash_pass = bcrypt.generate_password_hash(form.senha.data)
+            cnx = conectarBDMySQL()
+            conect = cnx.cursor()
+            conect.execute("Insert Into usuario (nome, nome_consultorio,email,senha, foto) Value (%s,%s,%s,%s,%s)",(form.nome.data,form.nome_consultorio.data,form.email.data,hash_pass,foto))
+            cnx.commit()
+            conect.close()
+            #usuario = Usuario(nome = form.nome.data , nome_consultorio = form.nome_consultorio.data, email = form.email.data, senha = '123456',foto=data)
+            #db.session.add(usuario)
+            #db.session.commit()
+            return redirect(url_for('loginacesso'))
+    else:
+         data   = None
+         objeto = None
+         return render_template('registrar.html', title= "Página de Registro", form = form,objeto=objeto,data=data)
 @app.route('/login', methods = ["GET", "POST"])
 def login():
    form = Formulario_login(request.form)
@@ -334,15 +371,14 @@ def login():
        if usuario and senha:
            session['email'] = Email
            bfoto = Usuario.query.filter_by(email=Email).first()
-           with open(bfoto,'rb') as f:
-               foto = io.IOBase(f.read())
+           foto = b64encode(bfoto.foto).decode("utf-8")
            flash(f'Bem vindo {Email} Você está logado', 'success')
-           return render_template('index.html',Foto = foto)
+           return render_template('index.html',bfoto=bfoto, foto = foto)
        else:
         #  flash(f'Não foi possivel logar')
-
+           return render_template('login.html',title = 'Login',form=form,showModal=true)
         #return redirect(url_for('index'))
-        return render_template('login.html', title = 'Login', form = form)
+        #return render_template('login.html', title = 'Login', form = form,showModal=false)
 
 @app.route('/logout')
 def logout():

@@ -26,9 +26,18 @@ objeto = None
 def conectarBDMySQL():
       return mysql.connector.connect(user='root', password='123456',host='localhost',database='Consultorio')
 
+@app.route('/procurarPaciente<string:valor>',methods = ["GET"])
+def procurarPaciente(valor):
+    if request.method == 'GET':
+        conectar = conectarBDMySQL()
+        cursor = conectar.cursor()
+        sql = """Select nome From pessoa WHERE pessoa.nome = %s"""
+        cursor.execute(sql,(valor,))
+        retorno = cursor.fetchall()
+    return render_template("pacientem.html",retorno=retorno)
+
 @app.route('/uploadImage',methods = ['GET', 'POST'])
 def uploadImage():
-
      if request.method == 'POST':
           form = Formulario_de_registro(request.form)
           uploade_file = request.files['filename']
@@ -39,10 +48,7 @@ def uploadImage():
           with open(diretorio,'rb') as file:
               objeto = file.read()
               data = b64encode(objeto).decode("utf-8")
-              return render_template('registrar.html', title="Página de Registro", form=form,objeto=objeto, data=data)
-
-          #return redirect(request.url,form=form,objeto=objeto,data=data)
-          # render_template('registrar.html',data=data)
+          return render_template('registrar.html', title="Página de Registro", form=form,objeto=objeto, data=data)
 
 @app.route('/addPaciente/<string:value>')
 def pagina(value):
@@ -335,6 +341,7 @@ def agenda(ano, mes):
 
 @app.route('/registrar', methods = ['GET', 'POST'])
 def registrar():
+    print("ldkjekdjle")
     form = Formulario_de_registro(request.form)
     if request.method == "POST" and form.validate():
             global objeto
@@ -350,9 +357,6 @@ def registrar():
             conect.execute("Insert Into usuario (nome, nome_consultorio,email,senha, foto) Value (%s,%s,%s,%s,%s)",(form.nome.data,form.nome_consultorio.data,form.email.data,hash_pass,foto))
             cnx.commit()
             conect.close()
-            #usuario = Usuario(nome = form.nome.data , nome_consultorio = form.nome_consultorio.data, email = form.email.data, senha = '123456',foto=data)
-            #db.session.add(usuario)
-            #db.session.commit()
             return redirect(url_for('loginacesso'))
     else:
          data   = None
@@ -373,10 +377,13 @@ def login():
            bfoto = Usuario.query.filter_by(email=Email).first()
            foto = b64encode(bfoto.foto).decode("utf-8")
            flash(f'Bem vindo {Email} Você está logado', 'success')
+           showModal = False;
            return render_template('index.html',bfoto=bfoto, foto = foto)
+
        else:
         #  flash(f'Não foi possivel logar')
-           return render_template('login.html',title = 'Login',form=form,showModal=true)
+           showModal=True
+           return render_template('login.html',title = 'Login',form=form,showModal=showModal)
         #return redirect(url_for('index'))
         #return render_template('login.html', title = 'Login', form = form,showModal=false)
 

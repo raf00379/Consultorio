@@ -40,6 +40,7 @@
       <input type="email" width="50" class="form-control rounded-4"  name="Email" id="Email" placeholder="name@example.com">
       <label for="floatingInput">E-Mail</label>
     </div>
+
     <div class="form-floating mb-3">
       <input type="password"  class="form-control rounded-4" name="Senha"  id="Senha" placeholder="Senha">
       <label for="floatingPassword">Senha</label>
@@ -47,55 +48,37 @@
     <div class="form-floating mb-3">
     <button class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
   </div>
+ </div>
   </form>
-  <div class="mb-3">
+  <div class="form-login-secundary">
     <a href="{{url_for('registrar')}}"> 
     <button class="w-100 btn btn-lg btn-outline-secondary">Resgistrar-se</button>
   </a>
   </div>
-  </div>
-  <button class="w-100 btn btn-lg btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">Modal</button>
-
-<!--{% if showModal == true %}-->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-   <!--Modal screen-->
- <div class="modal fade" id="rexampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{% if showModal == true %}
+  <script>
+     $(document).ready(()=>{
+        $('#exampleModal').modal('show');
+     });
+  </script>
+    <!--Modal screen-->
+ <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="rexampleModalLabel">Atenção!!!</h5>
+        <h6 class="modal-title" id="exampleModalLabel"><b>Atenção!!!</b></h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Erro ao fazer Login</p>
+        <p><b>Erro ao fazer Login. Confira os dados preenchidos.</b></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sim</button>
-        <button type="button" class="btn btn-primary"   data-bs-dismiss="modal">Não</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
       </div>
     </div>
   </div>
 </div>
-
-<!--{% endif %}-->
+{% endif %}
 </body>
 </html>
 {% endblock content %}

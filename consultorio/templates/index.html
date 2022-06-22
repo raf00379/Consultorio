@@ -18,7 +18,6 @@
       }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
 </head>
 <body>
    <!-- Top-Bar fixa -->
@@ -54,37 +53,38 @@
       <strong>Usuário</strong>
     </a>
     <class class="dropdown-menu dropdown-menu-dark text-anchor shadow" aria-labelledby="dropdownUser1">
-      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addPedagogo');">Adicionar Pedagogo</a>
-      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addPaciente');">Adicionar Paciente</a>
-      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addCoordenador');">Adicionar Coordenador</a>
-      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addEscola');">Adicionar Escola</a>
-      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addSituacao');">Adicionar Situação</a>
-      <a class="dropdown-item" href="#" onclick="JavaScript:CarregarPaginas('addSala');">Adicionar Sala</a>
+      <a class="dropdown-item"  href="#" onclick="JavaScript:CarregarPaginas('addPedagogo');">Adicionar Pedagogo</a>
+      <a class="dropdown-item"  href="#" onclick="JavaScript:CarregarPaginas('addPaciente');">Adicionar Paciente</a>
+      <a class="dropdown-item"  href="#" onclick="JavaScript:CarregarPaginas('addCoordenador');">Adicionar Coordenador</a>
+      <a class="dropdown-item"  href="#" onclick="JavaScript:CarregarPaginas('addEscola');">Adicionar Escola</a>
+      <a class="dropdown-item"  href="#" onclick="JavaScript:CarregarPaginas('addSituacao');">Adicionar Situação</a>
+      <a class="dropdown-item"  href="#" onclick="JavaScript:CarregarPaginas('addSala');">Adicionar Sala</a>
       <hr class="dropdown-divider">
       <a class="dropdown-item" href="{{url_for('logout')}}">Sair</a>
     </div>
     </div>
-    <form id="mform" class="d-flex">
-            <input type="search" class="form-control" placeholder="Buscar paciente..." aria-label="Search">
-            <span id="icon-pesquisa" class="glyphicon glyphicon-search">
-              <i  id="icon-pesquisa" class="bi bi-search"></i>
-            </span>
-            <button type="submit"  class="btn btn-light text-dark me-2">Buscar</button>
-    </form>
+    <div class="collapse navbar-collapse text-white" id="navbar"></div>
    </nav>
   </header>
 <!--Encerra Aqui a barra fix-->
 <br><br><br>
-
 <ibody>
   <iframe id="iPagina" src='' style='width:100%; height:100%; overflow: hidden; border:none;' scrolling="yes"  seamless='seamless' onload="this.style.height=(this.contentWindow.document.body.scrollHeight+20)+'px'">
   </iframe>
 </ibody>
 <script>
- function CarregarPaginas(pagina)
- {
-        document.getElementById("iPagina").src="{{url_for('pagina',value='substituir')}}".replace('substituir',pagina);
- }
+function BuscarPaciente()
+{
+    if(document.getElementById('buscarPac').value !='')
+    {
+           document.getElementById('mformPaciente').action ="{{url_for('procurarPaciente',valor='substituir')}}".replace('substituir',document.getElementById('buscarPac').value)
+           document.getElementById('mformPaciente').submit();
+    }
+}
+function CarregarPaginas(pagina,menu)
+{
+    document.getElementById("iPagina").src="{{url_for('pagina',value='substituir')}}".replace('substituir',pagina);
+}
 </script>
 </body>
 </html>

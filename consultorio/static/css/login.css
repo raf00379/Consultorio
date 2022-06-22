@@ -18,7 +18,13 @@ body {
   padding: 0px;
   margin: auto;
 }
-
+.form-login-secundary {
+  width: 100%;
+  max-width: 400px;
+  padding: 0px;
+  padding-top: 0px;
+  margin: auto;
+}
 .form-signin .checkbox {
   font-weight: 400;
 }
